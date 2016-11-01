@@ -21,6 +21,8 @@ public abstract class BinaryOperator extends Operator{
     {
         return this.operands[RIGHT];
     }
+    public void setLeftOperand(Symbol operand) { this.operands[LEFT] = operand; }
+    public void setRightOperand(Symbol operand) { this.operands[RIGHT] = operand; }
 
     public abstract boolean isCommutative();
     public abstract boolean isAssociative();

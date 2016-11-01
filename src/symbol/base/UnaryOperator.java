@@ -14,6 +14,7 @@ public abstract class UnaryOperator extends Operator {
     {
         return this.operands[0] ;
     }
+    public void setOperand(Symbol operand){ this.operands[0] = operand; }
 
     @Override
     public boolean equals(Object obj) {
