@@ -7,7 +7,6 @@ import symbol.base.UnaryOperator;
  * Created by waps12b on 2016. 11. 1..
  */
 public class Integral extends UnaryOperator {
-
     private Symbol lower;
     private Symbol upper;
     private Variable variable;
@@ -19,6 +18,7 @@ public class Integral extends UnaryOperator {
         this.upper = null;
         this.variable = null;
     }
+
     public Integral(Symbol innerFormula, Variable variable)
     {
         this(innerFormula);
@@ -36,6 +36,7 @@ public class Integral extends UnaryOperator {
     {
         return getOperand();
     }
+
     @Override
     public String toLaTex() {
         StringBuilder latex = new StringBuilder("\\int");
@@ -46,6 +47,7 @@ public class Integral extends UnaryOperator {
         latex.append(" " + getInnerFormula().toLaTex());
         if(variable != null)
             latex.append(String.format(" d%s", variable.toLaTex()));
+
         return latex.toString();
     }
 
