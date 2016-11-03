@@ -1,4 +1,4 @@
-package symbol.operator;
+package symbol.operator.unary;
 
 import symbol.Variable;
 import symbol.base.Symbol;
@@ -35,8 +35,8 @@ public class Sigma extends UnaryOperator {
     @Override
     public String toLaTex() {
         if(begin!=null && end!=null)
-            return String.format("{\\sum\\limits_{%s=%s}^%s %s}", iterator.toLaTex(), begin.toLaTex(), end.toLaTex(), getOperand().toLaTex());
-        return String.format("{\\sum %s}", getOperand().toLaTex());
+            return String.format("\\sum\\limits_{%s=%s}^%s %s", iterator.toLaTex(), begin.toLaTex(), end.toLaTex(), getOperand().toLaTex());
+        return String.format("\\sum %s", getOperand().toLaTex());
     }
 
     @Override
@@ -51,5 +51,10 @@ public class Sigma extends UnaryOperator {
             return getInnerFormula().equals(op.getInnerFormula());
         }
         return false;
+    }
+
+    @Override
+    public String[] getMaskArray() {
+        return new String[]{"\\sum"};
     }
 }

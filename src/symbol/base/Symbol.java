@@ -14,4 +14,6 @@ public abstract class Symbol {
     public boolean equals(Object obj) {
         return obj.getClass() == this.getClass();
     }
+
+    public abstract String[] getMaskArray();
 }

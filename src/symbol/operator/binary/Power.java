@@ -1,4 +1,4 @@
-package symbol.operator;
+package symbol.operator.binary;
 
 import sun.jvm.hotspot.debugger.cdbg.Sym;
 import symbol.base.BinaryOperator;
@@ -43,7 +43,7 @@ public class Power extends BinaryOperator {
 
     @Override
     public String toLaTex() {
-        return String.format("{%s^%s}",
+        return String.format("%s^%s",
                 getBase().toLaTex(),
                 getExponent().toLaTex());
     }
@@ -52,4 +52,10 @@ public class Power extends BinaryOperator {
     public String toMathML() {
         return null;
     }
+
+    @Override
+    public String[] getMaskArray() {
+        return new String[]{"^"};
+    }
+
 }

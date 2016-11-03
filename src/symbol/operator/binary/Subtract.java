@@ -1,4 +1,4 @@
-package symbol.operator;
+package symbol.operator.binary;
 
 import symbol.base.BinaryOperator;
 import symbol.base.Symbol;
@@ -6,9 +6,9 @@ import symbol.base.Symbol;
 /**
  * Created by waps12b on 2016. 11. 1..
  */
-public class Divide extends BinaryOperator {
+public class Subtract extends BinaryOperator {
 
-    protected Divide(Symbol operand1, Symbol operand2) {
+    protected Subtract(Symbol operand1, Symbol operand2) {
         super(operand1, operand2);
     }
 
@@ -29,12 +29,18 @@ public class Divide extends BinaryOperator {
 
     @Override
     public String toLaTex() {
-        return String.format("%s/%s", getLeftOperand().toLaTex(),
+        return String.format("%s-%s",
+                getLeftOperand().toLaTex(),
                 getRightOperand().toLaTex());
     }
 
     @Override
     public String toMathML() {
         return null;
+    }
+
+    @Override
+    public String[] getMaskArray() {
+        return new String[]{"-"};
     }
 }

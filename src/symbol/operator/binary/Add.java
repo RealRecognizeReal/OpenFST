@@ -1,20 +1,23 @@
-package symbol.operator;
+package symbol.operator.binary;
 
+import sun.jvm.hotspot.debugger.cdbg.Sym;
 import symbol.base.BinaryOperator;
 import symbol.base.Symbol;
 
 /**
  * Created by waps12b on 2016. 11. 1..
  */
-public class Subtract extends BinaryOperator {
+public class Add extends BinaryOperator {
 
-    protected Subtract(Symbol operand1, Symbol operand2) {
-        super(operand1, operand2);
+    public Add(Symbol left, Symbol right)
+    {
+        super(left,right);
     }
+
 
     @Override
     public boolean isCommutative() {
-        return false;
+        return true;
     }
 
     @Override
@@ -29,11 +32,18 @@ public class Subtract extends BinaryOperator {
 
     @Override
     public String toLaTex() {
-        return null;
+        return String.format("%s+%s",
+                getLeftOperand().toLaTex(),
+                getRightOperand().toLaTex());
     }
 
     @Override
     public String toMathML() {
         return null;
+    }
+
+    @Override
+    public String[] getMaskArray() {
+        return new String[]{"+"};
     }
 }
