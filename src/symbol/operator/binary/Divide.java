@@ -38,9 +38,5 @@ public class Divide extends BinaryOperator {
         return null;
     }
 
-    @Override
-    public String[] getMaskArray() {
-        return new String[]{"/"};
-    }
 
 }

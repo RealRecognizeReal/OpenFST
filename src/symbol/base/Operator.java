@@ -17,7 +17,6 @@ public abstract class Operator extends Symbol {
             Operator op = (Operator)obj;
             if(this.operands.length != op.operands.length)
                 return false;
-
             return true;
         }
         return false;

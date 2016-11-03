@@ -14,7 +14,6 @@ public class Add extends BinaryOperator {
         super(left,right);
     }
 
-
     @Override
     public boolean isCommutative() {
         return true;
@@ -42,8 +41,4 @@ public class Add extends BinaryOperator {
         return null;
     }
 
-    @Override
-    public String[] getMaskArray() {
-        return new String[]{"+"};
-    }
 }

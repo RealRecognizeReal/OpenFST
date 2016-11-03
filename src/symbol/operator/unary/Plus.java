@@ -21,8 +21,4 @@ public class Plus extends UnaryOperator {
         return null;
     }
 
-    @Override
-    public String[] getMaskArray() {
-        return new String[0];
-    }
 }

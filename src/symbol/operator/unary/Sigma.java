@@ -53,8 +53,4 @@ public class Sigma extends UnaryOperator {
         return false;
     }
 
-    @Override
-    public String[] getMaskArray() {
-        return new String[]{"\\sum"};
-    }
 }

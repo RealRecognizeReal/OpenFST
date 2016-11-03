@@ -53,9 +53,5 @@ public class Power extends BinaryOperator {
         return null;
     }
 
-    @Override
-    public String[] getMaskArray() {
-        return new String[]{"^"};
-    }
 
 }
