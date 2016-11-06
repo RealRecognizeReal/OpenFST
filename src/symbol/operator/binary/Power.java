@@ -46,6 +46,7 @@ public class Power extends BinaryOperator {
         return String.format("%s^%s",
                 getBase().toLaTex(),
                 getExponent().toLaTex());
+
     }
 
     @Override

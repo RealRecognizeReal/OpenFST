@@ -18,6 +18,7 @@ public class LaTexFormulaParser extends FormulaParserBase {
     @Override
     public Formula generateFormula() throws CanNotParseException {
         Symbol root = extractSymbol(latexString);
+
         return null;
     }
 
@@ -25,4 +26,5 @@ public class LaTexFormulaParser extends FormulaParserBase {
     {
         return null;
     }
+
 }

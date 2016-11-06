@@ -1,5 +1,6 @@
-package symbol;
+package symbol.operator.unary;
 
+import symbol.Variable;
 import symbol.base.Symbol;
 import symbol.base.UnaryOperator;
 
@@ -47,7 +48,6 @@ public class Integral extends UnaryOperator {
         latex.append(" " + getInnerFormula().toLaTex());
         if(variable != null)
             latex.append(String.format(" d%s", variable.toLaTex()));
-
         return latex.toString();
     }
 

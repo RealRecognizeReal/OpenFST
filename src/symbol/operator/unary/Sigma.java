@@ -34,6 +34,7 @@ public class Sigma extends UnaryOperator {
 
     @Override
     public String toLaTex() {
+
         if(begin!=null && end!=null)
             return String.format("\\sum\\limits_{%s=%s}^%s %s", iterator.toLaTex(), begin.toLaTex(), end.toLaTex(), getOperand().toLaTex());
         return String.format("\\sum %s", getOperand().toLaTex());

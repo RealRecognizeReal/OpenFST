@@ -21,8 +21,6 @@ public class Constant extends Numeric {
             Constant c = (Constant)obj;
             return value.equals(c.value);
         }
-
-
         return false;
     }
 

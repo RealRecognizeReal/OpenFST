@@ -5,6 +5,7 @@ package formula;
  */
 public class Formula
 {
+
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj);
