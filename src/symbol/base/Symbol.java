@@ -12,7 +12,7 @@ public abstract class Symbol {
 
     @Override
     public boolean equals(Object obj) {
-        return obj.getClass() == this.getClass();
+        return obj.getClass().equals(this.getClass()) ;
     }
 
 }

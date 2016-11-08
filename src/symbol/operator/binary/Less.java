@@ -6,16 +6,15 @@ import symbol.base.Symbol;
 /**
  * Created by Junghee on 2016-11-03.
  */
-public class MinusPlus extends BinaryOperator {
+public class Less extends BinaryOperator{
 
-
-    public MinusPlus(Symbol operand1, Symbol operand2) {
+    public Less(Symbol operand1, Symbol operand2) {
         super(operand1, operand2);
     }
 
     @Override
     public String toLaTex() {
-        return String.format("%s\\mp%s",getLeftOperand().toLaTex(),getRightOperand().toLaTex());
+        return String.format("%s\\textless%s",getLeftOperand().toLaTex(),getRightOperand().toLaTex());
     }
 
     @Override
@@ -25,16 +24,16 @@ public class MinusPlus extends BinaryOperator {
 
     @Override
     public boolean isCommutative() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isAssociative() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isDistributive() {
-        return true;
+        return false;
     }
 }

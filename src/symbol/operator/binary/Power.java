@@ -1,6 +1,5 @@
 package symbol.operator.binary;
 
-import sun.jvm.hotspot.debugger.cdbg.Sym;
 import symbol.base.BinaryOperator;
 import symbol.base.Symbol;
 

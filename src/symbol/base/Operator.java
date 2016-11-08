@@ -21,4 +21,9 @@ public abstract class Operator extends Symbol {
         }
         return false;
     }
+
+    public Symbol[] getOperands()
+    {
+        return this.operands;
+    }
 }
