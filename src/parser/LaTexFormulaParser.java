@@ -2,6 +2,7 @@ package parser;
 
 import formula.Formula;
 import javafx.util.Pair;
+import parser.converter.MathConverter;
 import symbol.base.Symbol;
 
 import javax.xml.crypto.dsig.keyinfo.KeyValue;
@@ -14,38 +15,41 @@ public class LaTexFormulaParser extends FormulaParserBase {
 
     private final String latexString;
 //    private final Pair<Integer, Integer>[] brackets;
-    private static TreeMap<String, String> BRACKET_PAIR = new TreeMap<>();
-    static {
-        String[][] pairs = new String[][]{
-                {"(", ")"},
-                {"\\left(", "\\right)"},
-                {"{", ")"},
-                {"\\left{", "\\right}"},
-                {"[", "]"},
-                {"\\left[", "\\right]"},
-        };
-
-        BRACKET_PAIR.put("(", ")");
-        BRACKET_PAIR.put(")", "(");
-
-        BRACKET_PAIR.put("\\left(", "\\right)");
-        BRACKET_PAIR.put(")", "(");
-
-        BRACKET_PAIR.put("\\{", "\\}");
-        BRACKET_PAIR.put("\\}", "\\{");
-
-        BRACKET_PAIR.put("[", "[");
-        BRACKET_PAIR.put("]", "]");
-
-
-
-    }
+//    private static TreeMap<String, String> BRACKET_PAIR = new TreeMap<>();
+//    static {
+//        String[][] pairs = new String[][]{
+//                {"(", ")"},
+//                {"\\left(", "\\right)"},
+//                {"{", ")"},
+//                {"\\left{", "\\right}"},
+//                {"[", "]"},
+//                {"\\left[", "\\right]"},
+//        };
+//
+//        BRACKET_PAIR.put("(", ")");
+//        BRACKET_PAIR.put(")", "(");
+//
+//        BRACKET_PAIR.put("\\left(", "\\right)");
+//        BRACKET_PAIR.put(")", "(");
+//
+//        BRACKET_PAIR.put("\\{", "\\}");
+//        BRACKET_PAIR.put("\\}", "\\{");
+//
+//        BRACKET_PAIR.put("[", "[");
+//        BRACKET_PAIR.put("]", "]");
+//
+//
+//
+//    }
 
 
     public LaTexFormulaParser(String latexString)
     {
 
         this.latexString = latexString.trim();
+        String mathml = MathConverter.convertLaTex2MathML(latexString);
+
+//        MathMLFormulaParser parser = new MathMLFormulaParser(mathml);
 
     }
 

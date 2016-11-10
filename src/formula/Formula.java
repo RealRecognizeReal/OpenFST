@@ -17,8 +17,6 @@ public class Formula
     private int size;
     private TreeMap<Class<? extends  Symbol>, Integer> counter;
 
-
-
     public Formula(Symbol root)
     {
         this.size = 0;
@@ -26,6 +24,7 @@ public class Formula
         this.counter = new TreeMap<>();
         dfs(root);
     }
+
 
     private void dfs(Symbol node)
     {
