@@ -14,74 +14,19 @@ import java.util.TreeMap;
 public class LaTexFormulaParser extends FormulaParserBase {
 
     private final String latexString;
-//    private final Pair<Integer, Integer>[] brackets;
-//    private static TreeMap<String, String> BRACKET_PAIR = new TreeMap<>();
-//    static {
-//        String[][] pairs = new String[][]{
-//                {"(", ")"},
-//                {"\\left(", "\\right)"},
-//                {"{", ")"},
-//                {"\\left{", "\\right}"},
-//                {"[", "]"},
-//                {"\\left[", "\\right]"},
-//        };
-//
-//        BRACKET_PAIR.put("(", ")");
-//        BRACKET_PAIR.put(")", "(");
-//
-//        BRACKET_PAIR.put("\\left(", "\\right)");
-//        BRACKET_PAIR.put(")", "(");
-//
-//        BRACKET_PAIR.put("\\{", "\\}");
-//        BRACKET_PAIR.put("\\}", "\\{");
-//
-//        BRACKET_PAIR.put("[", "[");
-//        BRACKET_PAIR.put("]", "]");
-//
-//
-//
-//    }
+    private final MathMLFormulaParser parser;
 
-
-    public LaTexFormulaParser(String latexString)
+    public LaTexFormulaParser(String latexString) throws Exception
     {
 
         this.latexString = latexString.trim();
         String mathml = MathConverter.convertLaTex2MathML(latexString);
 
-//        MathMLFormulaParser parser = new MathMLFormulaParser(mathml);
-
+        this.parser = new MathMLFormulaParser(mathml);
     }
 
     @Override
     public Formula generateFormula() throws CanNotParseException {
-        Symbol root = extractSymbol(latexString);
-
-        return null;
-    }
-
-    private Symbol extractSymbol(String str)
-    {
-        return null;
-    }
-
-
-    public static class SymbolChecker
-    {
-        private Pair<Class< ? extends Symbol >, String[] >[] table;
-        private TreeMap<String, Class< ? extends  Symbol> > latexToClass;
-
-        public SymbolChecker(Pair<Class< ? extends Symbol >, String[] >[] table)
-        {
-            this.table = table;
-            for(Pair<Class< ? extends Symbol >, String[] > pair : table)
-            {
-                for(String key : pair.getValue())
-                {
-                    latexToClass.put(key, pair.getKey());
-                }
-            }
-        }
-
+        return parser.generateFormula();
     }
 }

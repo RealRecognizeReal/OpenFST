@@ -28,7 +28,6 @@ public class MathConverter {
             latex = latex.replaceAll("\\\\dfrac","\\frac");
 
 
-
             //run python script that convert latex string to mathml string
             Process p = Runtime.getRuntime().exec(new String[]{"python", "src/parser/converter/script.py", latex});
             BufferedReader reader = new BufferedReader( new InputStreamReader( p.getInputStream()) );

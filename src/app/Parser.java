@@ -17,7 +17,7 @@ public class Parser {
         System.out.print("Input latex string >> ");
         latex = sc.nextLine().trim();
 
-        LaTexFormulaParser parser = new LaTexFormulaParser(latex);
+//        LaTexFormulaParser parser = new LaTexFormulaParser(latex);
 
 
 

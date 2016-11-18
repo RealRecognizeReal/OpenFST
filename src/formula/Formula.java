@@ -1,5 +1,6 @@
 package formula;
 
+import com.sun.xml.internal.ws.api.ha.StickyFeature;
 import javafx.util.Pair;
 import symbol.base.Operator;
 import symbol.base.Symbol;
@@ -66,4 +67,14 @@ public class Formula
         return false;
     }
 
+
+    public String toLatex()
+    {
+        return rootSymbol.toLaTex();
+    }
+
+    public String toMathML()
+    {
+        return rootSymbol.toMathML();
+    }
 }

@@ -54,24 +54,27 @@ public class MathMLFormulaParser extends FormulaParserBase {
      */
     private Symbol extractSymbol(Node node)
     {
+        if( node == null )
+            return null;
+
+
+
         if(node.getChildNodes().getLength() == 0)
         {
 
         }
 
 
-        if(node.getChildNodes().getLength() == 3)
+        if(node.getNodeName().equals("math"))
+            return extractSymbol(node.getChildNodes());
+
+        if(node.getNodeName().equals("mrow"))
         {
-            if ( node.getNodeName().equals("mrow") )
-            {
-                return extractSymbol( node.getChildNodes().item(0) );
-            }
-
-
-
+            if(node.getChildNodes().getLength()==1)
+                return extractSymbol(node.getChildNodes().item(0));
+            if(node.getChildNodes().getLength() == 3)
+                return extractSymbol( node.getChildNodes().item(1) );
         }
-
-
 
         return null;
     }
@@ -100,5 +103,19 @@ public class MathMLFormulaParser extends FormulaParserBase {
     }
 
 
+    // checker
+    private boolean isConstant(Node node)
+    {
+        if( node.getNodeName().equals("mi") )
+        {
+//            String s =
+        }
+        return false;
+    }
+
+    private boolean isAdd(Node node)
+    {
+        return node.getNodeName().equals("mo") && node.getTextContent().equals("&#x0002B;");
+    }
 
 }
