@@ -1,9 +1,7 @@
 package app;
 
-import formula.Formula;
-import parser.MathMLFormulaParser;
-import parser.converter.MathConverter;
-import symbol.base.Symbol;
+import core.Formula;
+import core.parser.LaTexFormulaParser;
 
 /**
  * Created by waps12b on 2016. 11. 15..
@@ -14,19 +12,19 @@ public class ParserTest {
     {
         String[] latexes = {
                 "a+b",
-                "\\frac {a} {b}",
-
+                "a*b",
+                "a-b",
+                "a+b+c",
         };
 
         int index = 0 ;
         for(String latex : latexes)
         {
             index++;
-            String mathml = MathConverter.convertLaTex2MathML(latex);
             try {
-                MathMLFormulaParser parser = new MathMLFormulaParser(mathml);
+                LaTexFormulaParser parser = new LaTexFormulaParser(latex);
                 Formula formula = parser.generateFormula();
-                System.out.println( String.format("(%3d) [ %s ]->[ %s ]", index, latex,  formula.toString()));
+                System.out.println( String.format("(%3d) [ %s ]->[ %s ]", index, latex,  formula.toLatex()));
             }catch (Exception ex)
             {
                 System.out.println( String.format("(%3d) [ %s ]->[ %s ]", index, latex,  " !! Failed !! "));

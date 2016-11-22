@@ -1,9 +1,5 @@
 package app;
 
-import formula.Formula;
-import parser.LaTexFormulaParser;
-import symbol.base.Symbol;
-
 import java.util.Scanner;
 
 /**
@@ -17,7 +13,7 @@ public class Parser {
         System.out.print("Input latex string >> ");
         latex = sc.nextLine().trim();
 
-//        LaTexFormulaParser parser = new LaTexFormulaParser(latex);
+//        LaTexFormulaParser core.parser = new LaTexFormulaParser(latex);
 
 
 

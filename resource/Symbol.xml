@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SymbolList>
+    <!-- name  : 기호의 이름. 클래스 이름과 대소문자까지 통일할 것 -->
+
+    <!-- mathml : MathML의 nodeName-->
+
+    <!-- priority : 기호의 처리 우선순위, 작을 수록 먼저 처리함-->
+
+    <!-- type : unary, binary, head -->
+
+    <!-- chain : 피연산자들 순서가 바뀌어도 상관없는 연산, [none] (default) , [all], [withOutHead] -->
+
+
+    <!-- [Rank] 0 -->
+    <Symbol name="Greater"          type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="GreaterOrEqual"   type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="Inequality"       type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="Equality"         type="binary"   priority=""         chain=""        mathml="" />
+
+    <!-- [Rank 1] -->
+    <Symbol name="MinusPlus"        type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="PlusMinus"        type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="Plus"             type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="Minus"            type="binary"   priority=""         chain=""        mathml="" />
+
+    <!-- [Rank 2] -->
+    <Symbol name="Division"         type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="Division"         type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="Inequality"       type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="Equality"         type="binary"   priority=""         chain=""        mathml="" />
+
+    <!-- [Rank 3] -->
+    <Symbol name="Fraction"         type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="GreaterOrEqual"   type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="Inequality"       type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="Equality"         type="binary"   priority=""         chain=""        mathml="" />
+
+    <!-- [Rank 4] -->
+    <Symbol name="Greater"          type="unary"    priority=""         chain=""        mathml="" />
+    <Symbol name="GreaterOrEqual"   type="unary"    priority=""         chain=""        mathml="" />
+    <Symbol name="Inequality"       type="unary"    priority=""         chain=""        mathml="" />
+    <Symbol name="Equality"         type="unary"    priority=""         chain=""        mathml="" />
+
+
+
+
+
+</SymbolList>

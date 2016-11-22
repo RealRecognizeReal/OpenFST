@@ -1,6 +1,6 @@
 package app;
 
-import parser.converter.MathConverter;
+import core.parser.converter.MathConverter;
 
 import java.util.Scanner;
 
