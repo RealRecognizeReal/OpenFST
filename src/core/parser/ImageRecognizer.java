@@ -14,10 +14,7 @@ import java.io.File;
 public class ImageRecognizer {
 
     static {
-//        System.load("/usr/local/Cellar/opencv/2.4.13.1/share/OpenCV/java/libopencv_java2413.dylib");
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-//        File lib = new File("lib/opencv/libopencv_java2413.dylib");
-//        System.load(lib.getAbsolutePath());
     }
 
     public ImageRecognizer(File img)
