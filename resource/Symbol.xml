@@ -4,7 +4,7 @@
 
     <!-- mathml : MathML의 nodeName-->
 
-    <!-- priority : 기호의 처리 우선순위, 작을 수록 먼저 처리함-->
+    <!-- priority : 기호의 처리 우선순위, 클수록 먼저 처리함-->
 
     <!-- type : unary, binary, head -->
 
@@ -12,25 +12,25 @@
 
 
     <!-- [Rank] 0 -->
-    <Symbol name="Greater"          type="binary"   priority=""         chain=""        mathml="" />
-    <Symbol name="GreaterOrEqual"   type="binary"   priority=""         chain=""        mathml="" />
-    <Symbol name="Inequality"       type="binary"   priority=""         chain=""        mathml="" />
-    <Symbol name="Equality"         type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="Greater"          type="binary"   priority="999"         chain="none"        mathml="" />
+    <Symbol name="GreaterOrEqual"   type="binary"   priority="998"         chain="none"        mathml="" />
+    <Symbol name="Inequality"       type="binary"   priority="997"         chain="all"        mathml="" />
+    <Symbol name="Equality"         type="binary"   priority="996"         chain="all"        mathml="" />
 
     <!-- [Rank 1] -->
-    <Symbol name="MinusPlus"        type="binary"   priority=""         chain=""        mathml="" />
-    <Symbol name="PlusMinus"        type="binary"   priority=""         chain=""        mathml="" />
-    <Symbol name="Plus"             type="binary"   priority=""         chain=""        mathml="" />
-    <Symbol name="Minus"            type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="Plus"             type="binary"   priority="888"         chain="all"          mathml="" />
+    <Symbol name="Subtract"         type="binary"   priority="887"         chain="withOutHead"  mathml="" />
+    <Symbol name="Multiply"         type="binary"   priority="886"         chain="all"          mathml="" />
+    <Symbol name="Divide"           type="binary"   priority="885"         chain="withOutHead"  mathml="" />
 
     <!-- [Rank 2] -->
-    <Symbol name="Division"         type="binary"   priority=""         chain=""        mathml="" />
-    <Symbol name="Division"         type="binary"   priority=""         chain=""        mathml="" />
-    <Symbol name="Inequality"       type="binary"   priority=""         chain=""        mathml="" />
-    <Symbol name="Equality"         type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="PlusMinus"         type="binary"   priority="777"         chain=""        mathml="" />
+    <Symbol name="MinusPlus"         type="binary"   priority="700"         chain=""        mathml="" />
 
     <!-- [Rank 3] -->
-    <Symbol name="Fraction"         type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="Power"            type="binary"   priority="600"         chain=""        mathml="" />
+
+
     <Symbol name="GreaterOrEqual"   type="binary"   priority=""         chain=""        mathml="" />
     <Symbol name="Inequality"       type="binary"   priority=""         chain=""        mathml="" />
     <Symbol name="Equality"         type="binary"   priority=""         chain=""        mathml="" />

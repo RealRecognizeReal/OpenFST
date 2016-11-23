@@ -61,6 +61,11 @@ public class MathMLFormulaParser extends FormulaParserBase {
     }
 
 
+    /**
+     * 미리 처리해야할 것들을 처리함
+     * 예 : 단항 연산자들의 처리
+     * @param node
+     */
     private void normalize(Node node)
     {
         if(node == null)
@@ -73,7 +78,7 @@ public class MathMLFormulaParser extends FormulaParserBase {
         String nodeText = node.getTextContent();
 
 
-        if(!node.hasChildNodes())
+        if(false == node.hasChildNodes())
             return;
 
 
@@ -220,4 +225,34 @@ public class MathMLFormulaParser extends FormulaParserBase {
     public static class MathMLParsingException extends Exception
     {}
 
+
+    public enum MathMLSymbols
+    {
+//        Add(core.symbol.operator.binary.Add.class, "+", 880, true, true)
+        ;
+
+        public final int priority;
+        public final String tag;
+        public final Class<? extends Symbol> symbolClass;
+        public final boolean isBinary;
+        public final int isChainable;
+        private MathMLSymbols(Class<? extends Symbol> symbolClass, String tag, int priority, boolean isBinary, int isChainable )
+        {
+            this.symbolClass = symbolClass;
+            this.tag = tag ;
+            this.priority = priority;
+            this.isBinary = isBinary;
+            this.isChainable = isChainable;
+        }
+
+
+        public static final int CHAIN_NONE = 0;
+        public static final int CHAIN_ALL  = 1;
+        public static final int CHAIN_WITHOUT_HEAD = 2;
+        public static MathMLSymbols getSymbolFromNode(Node node)
+        {
+
+            return null;
+        }
+    }
 }
