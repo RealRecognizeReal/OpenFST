@@ -7,19 +7,20 @@ import java.io.*;
  */
 public class MathConverter {
 
+    public static final String REMOVE_REGEX = "\\\\displaystyle|\\\\scriptstyle|\\\\limits|\\\\textstyle|\\\\scriptstyle";
+    public static final String REPLACE_FRAC_REGEX = "\\\\tfrac|\\\\dfrac";
+
     public static String convertLaTex2MathML(String latex)
     {
         try{
-            //remove useless styletag
-            latex = latex.replaceAll("\\\\displaystyle","");
-            latex = latex.replaceAll("\\\\textstyle","");
-            latex = latex.replaceAll("\\\\scriptstyle","");
-            latex = latex.replaceAll("\\\\tfrac","\\frac");
-            latex = latex.replaceAll("\\\\dfrac","\\frac");
+            //remove useless tag
+            latex = latex.replaceAll(REMOVE_REGEX,"");
 
+            //replace various xfrac tags with frac
+            latex = latex.replaceAll(REPLACE_FRAC_REGEX,"\\frac");
 
-            //run python script that convert latex string to mathml string
-            Process p = Runtime.getRuntime().exec(new String[]{"python", "src/core.parser/converter/script.py", latex});
+            //run nodejs script that convert latex string to mathml string
+            Process p = Runtime.getRuntime().exec(new String[]{"node", "src/core/parser/converter/converter.js", latex.trim()});
             BufferedReader reader = new BufferedReader( new InputStreamReader( p.getInputStream()) );
             String result = "";
             String line;
