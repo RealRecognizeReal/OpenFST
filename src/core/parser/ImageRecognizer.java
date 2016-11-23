@@ -3,6 +3,7 @@ package core.parser;
 
 
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 
@@ -14,12 +15,14 @@ import java.io.File;
 public class ImageRecognizer {
 
     static {
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+//        System.load("/Users/waps12b/IdeaProjects/OpenFST/lib/opencv/opencv-2413.jar");
+        System.load("/Users/waps12b/IdeaProjects/OpenFST/lib/opencv/libopencv_java2413.dylib");
+//        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
     public ImageRecognizer(File img)
     {
-        Mat mat = Highgui.imread(img.getAbsolutePath(), Highgui.CV_LOAD_IMAGE_ANYCOLOR);
+        Mat mat = Mat.eye(1,1, CvType.CV_8UC1);
     }
 
     public static void main(String[] args)
