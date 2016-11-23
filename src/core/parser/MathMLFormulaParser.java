@@ -48,7 +48,7 @@ public class MathMLFormulaParser extends FormulaParserBase {
                 dbFactory.setIgnoringElementContentWhitespace(true);
 
                 xml = dbFactory.newDocumentBuilder().parse(new ByteArrayInputStream(mathmlString.getBytes()));
-                documentNode = xml.getDocumentElement();
+                documentNode = xml.getDocumentElement().getChildNodes().item(0);
             }catch (Exception ex)
             {
                 throw new MathMLParsingException();

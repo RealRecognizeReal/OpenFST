@@ -6,6 +6,7 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
+import org.opencv.highgui.VideoCapture;
 
 import java.io.File;
 
@@ -16,13 +17,14 @@ public class ImageRecognizer {
 
     static {
 //        System.load("/Users/waps12b/IdeaProjects/OpenFST/lib/opencv/opencv-2413.jar");
-        System.load("/Users/waps12b/IdeaProjects/OpenFST/lib/opencv/libopencv_java2413.dylib");
+//        System.load("/usr/local/Cellar/opencv/2.4.13.1/share/OpenCV/java/libopencv_java2413.dylib");
 //        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
     public ImageRecognizer(File img)
     {
-        Mat mat = Mat.eye(1,1, CvType.CV_8UC1);
+
+        VideoCapture capture = new VideoCapture(0);
     }
 
     public static void main(String[] args)

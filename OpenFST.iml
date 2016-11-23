@@ -12,13 +12,17 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/opencv-2.4.13/release/bin/opencv-2413.jar!/" />
+          <root url="jar:///usr/local/Cellar/opencv/2.4.13.1/share/OpenCV/java/opencv-2413.jar!/" />
         </CLASSES>
         <JAVADOC />
+        <NATIVE>
+          <root url="file:///usr/local/Cellar/opencv/2.4.13.1/share/OpenCV/java" />
+        </NATIVE>
         <SOURCES>
-          <root url="jar://$USER_HOME$/opencv-2.4.13/release/bin/opencv-2413.jar!/" />
+          <root url="jar:///usr/local/Cellar/opencv/2.4.13.1/share/OpenCV/java/opencv-2413.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="com.googlecode.json-simple:json-simple:1.1.1" level="project" />
   </component>
 </module>
