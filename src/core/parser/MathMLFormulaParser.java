@@ -1,6 +1,7 @@
 package core.parser;
 
 import core.Formula;
+import core.symbol.operator.unary.Factorial;
 import org.w3c.dom.*;
 import core.symbol.Constant;
 import core.symbol.Variable;
@@ -27,6 +28,7 @@ public class MathMLFormulaParser extends FormulaParserBase {
     private static final String SYMBOL_MINUS   = "-";
     private static final String SYMBOL_DIVIDE  = "÷";
     private static final String SYMBOL_EQUAL   = "=";
+    private static final String SYMBOL_FACTORIAL = "!";
 
     private static final Map<String, Integer> mapSym2Priority = new TreeMap<>();
     static {
@@ -70,24 +72,76 @@ public class MathMLFormulaParser extends FormulaParserBase {
             }
 
 //            reverseRelativeOp(documentNode);
-            insertMultiplier(documentNode);
             convertBrackets2mrow(documentNode);
+            insertMultiplier(documentNode);
+            convertFactorial(documentNode);
+
             this.formula =  new Formula( extractSymbol( documentNode ) );
         }
 
         return this.formula;
     }
 
+
+    private void convertFactorial(Node parent) {
+        if (parent == null || parent instanceof Text)
+            return;
+
+        int size = parent.getChildNodes().getLength();
+        if (size < 2)
+            return;
+
+        Node[] childs = new Node[size];
+        boolean exist = false;
+        for (int i = 0; i < size; i++)
+        {
+            childs[i] = parent.getChildNodes().item(i);
+            String text = childs[i].getTextContent();
+            if(childs[i] instanceof Text) continue;
+            if(text != null && text.equals(SYMBOL_FACTORIAL))
+            {
+                exist = true;
+            }
+        }
+
+        if(exist)
+        {
+            for(int i = 0 ; i<size; i++)
+                parent.removeChild(childs[i]);
+
+            ArrayList<Node> nodes = new ArrayList<>();
+            for(int i = 0; i < size; i++){
+                Node node = childs[i];
+                String text = node.getTextContent();
+                if(text == null) continue;
+                if(text.equals(SYMBOL_FACTORIAL))
+                {
+                    Node operand = nodes.get(nodes.size()-1);
+                    nodes.remove(nodes.size()-1);
+
+                    Node factorial = xml.createElement("mfactorial");
+                    factorial.appendChild(operand);
+
+                    node = factorial;
+                }
+                nodes.add(node);
+            }
+
+            for(Node node : nodes)
+                parent.appendChild(node);
+        }
+
+        for(int i = 0 ; i < parent.getChildNodes().getLength(); i++)
+            convertBrackets2mrow( parent.getChildNodes().item(i) );
+    }
     private void insertMultiplier(Node parent)
     {
         if(parent == null || parent instanceof Text)
             return;
 
         int size = parent.getChildNodes().getLength();
-        if(parent.getNodeName().equals("mrow"))
+        if(parent.getNodeName().equals("mrow") && size > 1)
         {
-            if(size <= 1) return;
-
             Node[] childs = new Node[size];
             for(int i =0 ; i < size; i++)
                 childs[i] = parent.getChildNodes().item(i);
@@ -106,6 +160,7 @@ public class MathMLFormulaParser extends FormulaParserBase {
                     mul.setTextContent(SYMBOL_MULTIPLY);
                     nodes.add(mul);
                 }
+                nodes.add(node);
                 last = node;
             }
 
@@ -116,106 +171,110 @@ public class MathMLFormulaParser extends FormulaParserBase {
         for(int i = 0 ; i < parent.getChildNodes().getLength(); i++)
             insertMultiplier(parent.getChildNodes().item(i));
     }
-    private void reverseRelativeOp(Node root)
-    {
-        if(root == null || root instanceof Text)
-            return;
+//    private void reverseRelativeOp(Node root)
+//    {
+//        if(root == null || root instanceof Text)
+//            return;
+//
+//        int size = root.getChildNodes().getLength();
+//        if(size < 2)    return;
+//
+//        Node[] childs = new Node[size];
+//        for(int i = 0 ; i < size; i++)
+//            childs[i] = root.getChildNodes().item(i);
+//
+//        boolean exist = false;
+//        boolean cant = false;
+//        for(int i = 0 ; i < size; i++)
+//        {
+//            Node node = childs[i];
+//            if(node instanceof Text || node.getTextContent() == null)
+//                continue;
+//
+//            if(!node.getNodeName().equals("mo"))
+//                continue;
+//
+//            String text = node.getTextContent();
+//            switch (text)
+//            {
+//                case "≤":
+//                case "<":
+//                    exist = true;
+//                    break;
+//                case ">":
+//                case "≥":
+//                    cant = true;
+//                    break;
+//            }
+//            if(exist||cant) break;
+//        }
+//
+//        if(!exist || cant)
+//            return;
+//
+//        Stack<Object> stack = new Stack<>();
+//        ArrayList<Node> last = null;
+//        for(int i = 0 ; i  < size; i++)
+//        {
+//            Node node = childs[i];
+//            String name = node.getNodeName();
+//            boolean pushed = false;
+//            if(node.getNodeName().equals("mo"))
+//            {
+//                switch(name)
+//                {
+//                    case "=":
+//                    case "<":
+//                    case ">":
+//                    case "≤":
+//                    case "≥":
+//                        stack.push(node);
+//                        pushed = true;
+//                        last = null;
+//                        break;
+//                }
+//            }
+//            if(pushed)  continue;
+//            if(last == null) {
+//                last = new ArrayList<>();
+//                stack.push(last);
+//            }
+//
+//            last.add(node);
+//        }
+//
+//        for(int i = 0 ; i < size; i++)
+//            root.removeChild(childs[i]);
+//
+//        while(stack.empty())
+//        {
+//            Object obj = stack.pop();
+//            if(obj instanceof Node)
+//            {
+//                Node node = (Node)obj;
+//                String text = node.getTextContent();
+//                switch (text)
+//                {
+//                    case "<":
+//                        node.setTextContent(">");
+//                        break;
+//                    case "≤":
+//                        node.setTextContent("≥");
+//                        break;
+//                }
+//                root.appendChild(node);
+//            }else
+//            {
+//                ArrayList<Node> list = (ArrayList<Node>)obj;
+//                for(Node node : list)
+//                    root.appendChild(node);
+//            }
+//        }
+//    }
+//
 
-        int size = root.getChildNodes().getLength();
-        if(size < 2)    return;
 
-        Node[] childs = new Node[size];
-        for(int i = 0 ; i < size; i++)
-            childs[i] = root.getChildNodes().item(i);
 
-        boolean exist = false;
-        boolean cant = false;
-        for(int i = 0 ; i < size; i++)
-        {
-            Node node = childs[i];
-            if(node instanceof Text || node.getTextContent() == null)
-                continue;
-
-            if(!node.getNodeName().equals("mo"))
-                continue;
-
-            String text = node.getTextContent();
-            switch (text)
-            {
-                case "≤":
-                case "<":
-                    exist = true;
-                    break;
-                case ">":
-                case "≥":
-                    cant = true;
-                    break;
-            }
-            if(exist||cant) break;
-        }
-
-        if(!exist || cant)
-            return;
-
-        Stack<Object> stack = new Stack<>();
-        ArrayList<Node> last = null;
-        for(int i = 0 ; i  < size; i++)
-        {
-            Node node = childs[i];
-            String name = node.getNodeName();
-            boolean pushed = false;
-            if(node.getNodeName().equals("mo"))
-            {
-                switch(name)
-                {
-                    case "=":
-                    case "<":
-                    case ">":
-                    case "≤":
-                    case "≥":
-                        stack.push(node);
-                        pushed = true;
-                        last = null;
-                        break;
-                }
-            }
-            if(pushed)  continue;
-            if(last == null) {
-                last = new ArrayList<>();
-                stack.push(last);
-            }
-
-            last.add(node);
-        }
-
-        for(int i = 0 ; i < size; i++)
-            root.removeChild(childs[i]);
-
-        while(stack.empty())
-        {
-            Object obj = stack.pop();
-            if(obj instanceof Node)
-            {
-                Node node = (Node)obj;
-                String text = node.getTextContent();
-                switch (text)
-                {
-                    case "<":
-                        node.setTextContent(">");
-                        break;
-                    case "≤":
-                        node.setTextContent("≥");
-                        break;
-                }
-                root.appendChild(node);
-            }else
-            {
-                ArrayList<Node> list = (ArrayList<Node>)obj;
-                for(Node node : list)
-                    root.appendChild(node);
-            }
-        }
-    }
 
 
     private void convertBrackets2mrow(Node parent)
@@ -334,6 +393,9 @@ public class MathMLFormulaParser extends FormulaParserBase {
 
             case "mi":
                 return new Variable( node.getTextContent() );
+
+            case "mfactorial":
+                return new Factorial( extractSymbol(node.getChildNodes()));
 
             case "munderover":
             case "msubsup":
