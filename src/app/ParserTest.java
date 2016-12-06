@@ -11,7 +11,7 @@ public class ParserTest {
     public static void main(String[] args)
     {
         String[] latexes = {
-                "a+b",
+                "(a)+(b)",
                 "a*b",
                 "a-b",
                 "a+b+c",

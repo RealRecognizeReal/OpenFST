@@ -9,16 +9,14 @@
 
     <!-- [Rank] 0 -->
     <Operator name="Greater"        type="binary"   priority="999"         chain="none"     mathml="" />
-    <Operator name="Less"           type="binary"   priority="999"         chain="none"     mathml="" />
     <Operator name="GreaterOrEqual" type="binary"   priority="998"         chain="none"       mathml="" />
-    <Operator name="LessOrEqual"    type="binary"   priority="998"         chain="none"       mathml="" />
     <Operator name="NotEqual"        type="binary"   priority="997"         chain="all"        mathml="" />
     <Operator name="Equal"           type="binary"   priority="996"         chain="all"        mathml="" />
 
     <!-- [Rank 1] -->
-    <Operator name="Plus"           type="binary"   priority="888"         chain="all"          mathml="" />
-    <Operator name="Subtract"       type="binary"   priority="887"         chain="withOutHead"  mathml="" />
-    <Operator name="Multiply"       type="binary"   priority="886"         chain="all"          mathml="" />
+    <Operator name="Add"            type="binary"   priority="888"         chain="all"          mathml="+" />
+    <Operator name="Subtract"       type="binary"   priority="887"         chain="withOutHead"  mathml="-" />
+    <Operator name="Multiply"       type="binary"   priority="886"         chain="all"          mathml="*" />
     <Operator name="Divide"         type="binary"   priority="885"         chain="withOutHead"  mathml="" />
 
     <!-- [Rank 2] -->

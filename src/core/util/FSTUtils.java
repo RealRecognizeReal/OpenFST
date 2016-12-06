@@ -5,11 +5,23 @@ package core.util;
  */
 public class FSTUtils {
 
-    public static boolean isDigitString(String string)
+
+    public static boolean isFloatString(String string)
     {
         try
         {
             Double.parseDouble(string);
+            return true;
+        }catch (Exception ex)
+        {
+            return false;
+        }
+    }
+    public static boolean isIntegerString(String string)
+    {
+        try
+        {
+            Integer.parseInt(string);
             return true;
         }catch (Exception ex)
         {

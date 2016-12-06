@@ -11,6 +11,9 @@ import core.util.FSTUtils;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Stack;
+import java.util.TreeMap;
 
 public class MathMLFormulaParser extends FormulaParserBase {
     private final String mathmlString;
@@ -42,77 +45,204 @@ public class MathMLFormulaParser extends FormulaParserBase {
                 dbFactory.setIgnoringElementContentWhitespace(true);
 
                 xml = dbFactory.newDocumentBuilder().parse(new ByteArrayInputStream(mathmlString.getBytes()));
-                documentNode = xml.getDocumentElement().getChildNodes().item(0);
+                documentNode = xml.getDocumentElement().getChildNodes().item(0).getChildNodes().item(0);
             }catch (Exception ex)
             {
                 throw new MathMLParsingException();
             }
-            //
+
+//            reverseRelativeOp(documentNode);
+            convertBrackets2mrow(documentNode);
             this.formula =  new Formula( extractSymbol( documentNode ) );
         }
 
         return this.formula;
     }
 
-
-    /**
-     * 미리 처리해야할 것들을 처리함
-     * 예 : 단항 연산자들의 처리
-     * @param node
-     */
-    private void normalize(Node node)
+    private void reverseRelativeOp(Node root)
     {
-        if(node == null)
+        if(root == null || root instanceof Text)
             return;
 
-        if( node instanceof Text )
-            return;
+        int size = root.getChildNodes().getLength();
+        if(size < 2)    return;
 
-        String nodeName = node.getNodeName();
-        String nodeText = node.getTextContent();
+        Node[] childs = new Node[size];
+        for(int i = 0 ; i < size; i++)
+            childs[i] = root.getChildNodes().item(i);
 
-        if(false == node.hasChildNodes())
-            return;
-
-
-        int size = node.getChildNodes().getLength();
+        boolean exist = false;
+        boolean cant = false;
         for(int i = 0 ; i < size; i++)
         {
-            Node child = node.getChildNodes().item(i);
-            node.removeChild(child);
-
-            String childName = child.getNodeName();
-            String childText = child.getTextContent();
-            if(childText == null)   childText = "";
-
-            if(childName.equals("mfrac"))
-            {
-                Element div = xml.createElement("mrow");
-
-                div.appendChild(child.getFirstChild());
-
-                Element op = xml.createElement("mo");
-                op.setTextContent("/");
-
-                div.appendChild(op);
-                div.appendChild(child.getLastChild());
-
-                node.replaceChild(div, child);
+            Node node = childs[i];
+            if(node instanceof Text || node.getTextContent() == null)
                 continue;
-            }else if(childText.equals("!"))
-            {
-                Element factorial = xml.createElement("mo");
-                factorial.setTextContent("!");
-                node.replaceChild(factorial, child);
+
+            if(!node.getNodeName().equals("mo"))
                 continue;
+
+            String text = node.getTextContent();
+            switch (text)
+            {
+                case "≤":
+                case "<":
+                    exist = true;
+                    break;
+                case ">":
+                case "≥":
+                    cant = true;
+                    break;
+            }
+            if(exist||cant) break;
+        }
+
+        if(!exist || cant)
+            return;
+
+        Stack<Object> stack = new Stack<>();
+        ArrayList<Node> last = null;
+        for(int i = 0 ; i  < size; i++)
+        {
+            Node node = childs[i];
+            String name = node.getNodeName();
+            boolean pushed = false;
+            if(node.getNodeName().equals("mo"))
+            {
+                switch(name)
+                {
+                    case "=":
+                    case "<":
+                    case ">":
+                    case "≤":
+                    case "≥":
+                        stack.push(node);
+                        pushed = true;
+                        last = null;
+                        break;
+                }
+            }
+            if(pushed)  continue;
+            if(last == null) {
+                last = new ArrayList<>();
+                stack.push(last);
+            }
+
+            last.add(node);
+        }
+
+        for(int i = 0 ; i < size; i++)
+            root.removeChild(childs[i]);
+
+        while(stack.empty())
+        {
+            Object obj = stack.pop();
+            if(obj instanceof Node)
+            {
+                Node node = (Node)obj;
+                String text = node.getTextContent();
+                switch (text)
+                {
+                    case "<":
+                        node.setTextContent(">");
+                        break;
+                    case "≤":
+                        node.setTextContent("≥");
+                        break;
+                }
+                root.appendChild(node);
+            }else
+            {
+                ArrayList<Node> list = (ArrayList<Node>)obj;
+                for(Node node : list)
+                    root.appendChild(node);
             }
         }
 
+
+    }
+    private void convertBrackets2mrow(Node parent)
+    {
+        if(parent == null || parent instanceof  Text )
+            return;
+
+        int size =  parent.getChildNodes().getLength() ;
+        if(size < 2)   return;;
+
+        Node[] childs = new Node[size];
+        for(int i = 0 ; i < size; i++)
+            childs[i] = parent.getChildNodes().item(i);
+
+        for(int i = 0 ; i < size; i++)
+            parent.removeChild(childs[i]);
+
+        ArrayList<Node> temp = new ArrayList<>();
+        Stack<Integer> s = new Stack<>();
         for(int i = 0 ; i < size; i++)
         {
-            normalize(node.getChildNodes().item(i));
+            Node node = childs[i];
+
+            String text = childs[i].getTextContent();
+            boolean inserted = false;
+            if(text != null)
+            {
+                switch (text)
+                {
+                    case "(":
+                    case "{":
+                    case "[":
+                        s.push(i);
+                        inserted = true;
+                        break;
+
+                    case ")":
+                    case "}":
+                    case "]":
+                        int from = s.pop() + 1;
+                        int to = i - 1;
+                        if(s.size() == 0)
+                        {
+                            Node row = xml.createElement("mrow");
+                            for(int idx = from; idx <= to; idx++)
+                                row.appendChild(childs[idx]);
+                            temp.add(row);
+                        }
+                        inserted = true;
+                        break;
+                }
+            }
+            if(!inserted && s.size() == 0)
+                temp.add(node);
         }
+
+        for(Node node : temp)
+            parent.appendChild(node);
+
+        for(Node node : temp)
+            convertBrackets2mrow(node);
     }
+
+
+//    private static final Map<String, String> opRev = new TreeMap<>();
+//    static
+//    {
+//        opRev.put("+", "-");
+//        opRev.put("-", "+");
+//        opRev.put("±", "∓");
+//        opRev.put("∓", "±");
+//    }
+//
+//
+//    private void removeSign(Node parent)
+//    {
+//        if(parent == null || parent instanceof  Text )
+//            return;
+//
+//        int size =  parent.getChildNodes().getLength() ;
+//        if(size < 2)   return;
+//
+//        Node[] childs =
+//    }
 
     /**
      * 하나의 루트 노드를 기준으로 core.symbol 트리를 형성하고 그 트리의 루트 노드를 반환하는 메소드
@@ -124,54 +254,30 @@ public class MathMLFormulaParser extends FormulaParserBase {
         if( node == null )
             return null;
 
-        int nChild = node.getChildNodes().getLength();
-        String nodeName = node.getNodeName();
+        String nodeName = node.getNodeName().toLowerCase();
 
-        if(nodeName.equals("merror") || nodeName.equals("annotation"))
-            return  null;
-
-        //mrow, math항목은 단순히 하위 차일드를 가진 의미없는 엘리먼트
-        if( nodeName.equals("mrow") || nodeName.equals("math") ||  nodeName.equals("semantic") )
+        switch (nodeName)
         {
-            if(nChild > 0 )
-                return extractSymbol(node.getChildNodes());
-            return null;
-        }
-
-        //leaf 노드
-        if(node.getNodeName().equals("mn"))
-        {
-
-        }
-        if(node.getNodeName().equals("mi") )
-        {
-            String nodeText = node.getTextContent().trim();
-            if(nodeText.length() <= 0)
+            case "merror":
+            case "annoration":
                 return null;
 
-            if(FSTUtils.isDigitString( node.getTextContent() )) {
-                return new Constant( Double.parseDouble(node.getTextContent()) );
-            }else {
-                return new Variable(node.getTextContent());
-            }
+            case "mrow":
+            case "math":
+            case "semantic":
+                return extractSymbol(node.getChildNodes());
+
+            case "mn":
+                String nodeText = node.getTextContent();
+                if(FSTUtils.isFloatString(nodeText))
+                    return new Constant( Double.parseDouble(nodeText) );
+                if(FSTUtils.isIntegerString(nodeText))
+                    return new Constant( Integer.parseInt(nodeText) );
+                return null;
+
+            case "mi":
+                return new Variable( node.getTextContent() );
         }
-
-        //문서의 루트 노드
-        if(node.getNodeName().equals("math"))
-            return extractSymbol(node.getChildNodes());
-
-        //<mrow>의 경우
-        if(node.getNodeName().equals("mrow"))
-        {
-            return extractSymbol(node.getChildNodes());
-//
-//            if(node.getChildNodes().getLength()==1)
-//                return extractSymbol(node.getChildNodes().item(0));
-//            if(node.getChildNodes().getLength() == 3)
-//                return extractSymbol( node.getChildNodes().item(1) );
-//            return extractSymbol(node.getChildNodes());
-        }
-
         return null;
     }
 
