@@ -1,6 +1,7 @@
 package core.parser;
 
 import core.Formula;
+import core.symbol.operator.binary.Power;
 import core.symbol.operator.unary.Factorial;
 import org.w3c.dom.*;
 import core.symbol.Constant;
@@ -134,6 +135,17 @@ public class MathMLFormulaParser extends FormulaParserBase {
         for(int i = 0 ; i < parent.getChildNodes().getLength(); i++)
             convertBrackets2mrow( parent.getChildNodes().item(i) );
     }
+
+    private void convertSigma(Node parent)
+    {
+        if(parent == null || parent instanceof Text)
+            return;
+
+        int size = parent.getChildNodes().getLength();
+        if(size == 0)   return;;
+
+    }
+
     private void insertMultiplier(Node parent)
     {
         if(parent == null || parent instanceof Text)
@@ -396,6 +408,12 @@ public class MathMLFormulaParser extends FormulaParserBase {
 
             case "mfactorial":
                 return new Factorial( extractSymbol(node.getChildNodes()));
+
+            case "mroot":
+                return new Power( extractSymbol(node.getFirstChild()) , extractSymbol(node.getLastChild()));
+
+            case "msqrt":
+                return new Power( extractSymbol(node.getFirstChild()), new Constant(1,2));
 
             case "munderover":
             case "msubsup":

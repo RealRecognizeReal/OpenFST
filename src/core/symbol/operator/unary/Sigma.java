@@ -8,21 +8,19 @@ import core.symbol.base.UnaryOperator;
  * Created by dongyi on 16. 11. 1.
  */
 public class Sigma extends UnaryOperator {
-    private Variable iterator;
     private Symbol begin;
     private Symbol end;
 
-    public Sigma(Variable iterator, Symbol begin, Symbol end, Symbol innerFormula)
+    public Sigma(Symbol begin, Symbol end, Symbol innerFormula)
     {
-        this(iterator, innerFormula);
+        this(innerFormula);
         this.begin = begin;
         this.end = end;
     }
 
-    public Sigma(Variable iterator, Symbol innerFormula)
+    public Sigma(Symbol innerFormula)
     {
         super(innerFormula);
-        this.iterator = iterator;
         this.begin = null;
         this.end = null;
     }
@@ -34,10 +32,14 @@ public class Sigma extends UnaryOperator {
 
     @Override
     public String toLaTex() {
-
-        if(begin!=null && end!=null)
-            return String.format("\\sum\\limits_{%s=%s}^%s %s", iterator.toLaTex(), begin.toLaTex(), end.toLaTex(), getOperand().toLaTex());
-        return String.format("\\sum %s", getOperand().toLaTex());
+        StringBuilder builder = new StringBuilder("\\sum");
+        if(begin!=null)
+            builder.append(String.format("_%s", begin.toLaTex()));
+        if(end!=null)
+            builder.append(String.format("^%s", end.toLaTex()));
+        if(getInnerFormula()!=null)
+            builder.append(String.format(" %s", getInnerFormula().toLaTex()));
+        return builder.toString();
     }
 
     @Override

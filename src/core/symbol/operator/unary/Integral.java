@@ -45,9 +45,10 @@ public class Integral extends UnaryOperator {
             latex.append(String.format("_{%s}", lower.toLaTex()));
         if(upper != null)
             latex.append(String.format("^{$s}", upper.toLaTex()));
-        latex.append(" " + getInnerFormula().toLaTex());
+        if(getInnerFormula()!=null)
+            latex.append(String.format("{%s}",getInnerFormula().toLaTex()));
         if(variable != null)
-            latex.append(String.format(" d%s", variable.toLaTex()));
+            latex.append(String.format("{d%s}", variable.toLaTex()));
         return latex.toString();
     }
 
