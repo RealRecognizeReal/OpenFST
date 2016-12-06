@@ -16,7 +16,7 @@ public class Multiply extends BinaryOperator{
 
     @Override
     public String toLaTex() {
-        return String.format("%s*%s",getLeftOperand().toLaTex(),getRightOperand().toLaTex());
+        return String.format("{%s}{%s}",getLeftOperand().toLaTex(),getRightOperand().toLaTex());
     }
 
     @Override

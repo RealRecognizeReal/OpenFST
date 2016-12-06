@@ -14,8 +14,6 @@ public class LaTexFormulaParser extends FormulaParserBase {
     {
 
         this.latexString = latexString.trim();
-        String mathml = MathConverter.convertLaTex2MathML(latexString);
-
     }
 
     @Override

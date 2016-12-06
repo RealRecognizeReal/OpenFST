@@ -6,14 +6,14 @@ import core.symbol.base.UnaryOperator;
 /**
  * Created by waps12b on 2016. 11. 3..
  */
-public class Plus extends UnaryOperator {
-    protected Plus(Symbol operand) {
+public class PlusSign extends UnaryOperator {
+    public PlusSign(Symbol operand) {
         super(operand);
     }
 
     @Override
     public String toLaTex() {
-        return null;
+        return String.format("+{%s}", getOperand().toLaTex());
     }
 
     @Override

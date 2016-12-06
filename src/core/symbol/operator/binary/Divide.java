@@ -8,7 +8,7 @@ import core.symbol.base.Symbol;
  */
 public class Divide extends BinaryOperator {
 
-    protected Divide(Symbol operand1, Symbol operand2) {
+    public Divide(Symbol operand1, Symbol operand2) {
         super(operand1, operand2);
     }
 
@@ -29,7 +29,7 @@ public class Divide extends BinaryOperator {
 
     @Override
     public String toLaTex() {
-        return String.format("%s/%s", getLeftOperand().toLaTex(),
+        return String.format("{%s}/{%s}", getLeftOperand().toLaTex(),
                 getRightOperand().toLaTex());
     }
 

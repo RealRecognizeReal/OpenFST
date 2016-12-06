@@ -30,7 +30,7 @@ public class Add extends BinaryOperator {
 
     @Override
     public String toLaTex() {
-        return String.format("%s+%s",
+        return String.format("{%s}+{%s}",
                 getLeftOperand().toLaTex(),
                 getRightOperand().toLaTex());
     }

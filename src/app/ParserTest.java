@@ -15,6 +15,11 @@ public class ParserTest {
                 "1+b",
                 "0.5+1",
                 "a+b+c",
+                "b+a+c",
+                "b+{a+c}",
+                "{b+c}+{{a}}",
+                "x=\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}",
+                "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}=x",
         };
 
         int index = 0 ;
@@ -24,10 +29,11 @@ public class ParserTest {
             try {
                 LaTexFormulaParser parser = new LaTexFormulaParser(latex);
                 Formula formula = parser.generateFormula();
-                System.out.println( String.format("(%3d) [ %s ]->[ %s ]", index, latex,  formula.toLatex()));
+                System.out.println( String.format("(%3d) [ %20s ]->[ %20s ]", index, latex,  formula.toLatex()));
             }catch (Exception ex)
             {
-                System.out.println( String.format("(%3d) [ %s ]->[ %s ]", index, latex,  " !! Failed !! "));
+                System.out.println( String.format("(%3d) [ %20s ]->[ %20s ]", index, latex,  " !! Failed !! "));
+                ex.printStackTrace();
             }
 
         }

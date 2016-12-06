@@ -8,7 +8,7 @@ import core.symbol.base.Symbol;
  */
 public class Subtract extends BinaryOperator {
 
-    protected Subtract(Symbol operand1, Symbol operand2) {
+    public Subtract(Symbol operand1, Symbol operand2) {
         super(operand1, operand2);
     }
 
@@ -29,7 +29,7 @@ public class Subtract extends BinaryOperator {
 
     @Override
     public String toLaTex() {
-        return String.format("%s-%s",
+        return String.format("{%s}-{%s}",
                 getLeftOperand().toLaTex(),
                 getRightOperand().toLaTex());
     }

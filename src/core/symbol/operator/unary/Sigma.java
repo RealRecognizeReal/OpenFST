@@ -34,11 +34,11 @@ public class Sigma extends UnaryOperator {
     public String toLaTex() {
         StringBuilder builder = new StringBuilder("\\sum");
         if(begin!=null)
-            builder.append(String.format("_%s", begin.toLaTex()));
+            builder.append(String.format("_{%s}", begin.toLaTex()));
         if(end!=null)
-            builder.append(String.format("^%s", end.toLaTex()));
+            builder.append(String.format("^{%s}", end.toLaTex()));
         if(getInnerFormula()!=null)
-            builder.append(String.format(" %s", getInnerFormula().toLaTex()));
+            builder.append(String.format("{%s}", getInnerFormula().toLaTex()));
         return builder.toString();
     }
 

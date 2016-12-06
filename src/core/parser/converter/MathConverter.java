@@ -20,7 +20,7 @@ public class MathConverter {
             latex = latex.replaceAll(REPLACE_FRAC_REGEX,"\\\\frac");
             latex = latex.replaceAll(REPLACE_BINOM_REGEX,"\\\\binom");
 
-            System.out.println(latex);
+//            System.out.println(latex);
 
 
             //run nodejs script that convert latex string to mathml string
@@ -37,6 +37,7 @@ public class MathConverter {
         }catch (Exception ex)
         {
             System.out.println(ex.toString());
+            ex.printStackTrace();
             return null;
         }
     }

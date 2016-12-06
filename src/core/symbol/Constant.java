@@ -79,9 +79,9 @@ public class Constant extends Numeric {
     @Override
     public String toLaTex() {
         if(denominator == 1)
-            return String.format("%d", denominator);
+            return String.format("%d", numerator);
         else
-            return String.format("%.03f", (double)numerator / denominator);
+            return String.format("%f", (double)numerator / denominator);
     }
 
     @Override

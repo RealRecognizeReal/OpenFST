@@ -1,42 +1,77 @@
 package core.parser;
 
 import core.Formula;
-import core.symbol.operator.binary.Power;
-import core.symbol.operator.unary.Factorial;
+import core.symbol.base.BinaryOperator;
+import core.symbol.base.Operator;
+import core.symbol.operator.binary.Combination;
+import core.symbol.operator.binary.*;
+import core.symbol.operator.comparator.Equality;
+import core.symbol.operator.comparator.Inequality;
+import core.symbol.operator.unary.*;
 import org.w3c.dom.*;
 import core.symbol.Constant;
 import core.symbol.Variable;
 import core.symbol.base.Symbol;
-import core.symbol.operator.binary.Add;
 import core.util.FSTUtils;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Stack;
-import java.util.TreeMap;
+import java.util.*;
 
 public class MathMLFormulaParser extends FormulaParserBase {
     private final String mathmlString;
     private Document xml = null;
     private Formula formula = null;
 
-    private static final String SYMBOL_INTGRAL = "∫";
-    private static final String SYMBOL_SIGMA   = "∑";
-    private static final String SYMBOL_MULTIPLY= "×";
+    private static final String SYMBOL_EQUAL   = "=";
+    private static final String SYMBOL_LESS    = "<";
+    private static final String SYMBOL_LEQ     = "≤";
+    private static final String SYMBOL_GREATER = ">";
+    private static final String SYMBOL_GEQ     = "≥";
+    private static final String SYMBOL_NEQ     = "≠";
+
     private static final String SYMBOL_PLUS    = "+";
     private static final String SYMBOL_MINUS   = "-";
+
+    private static final String SYMBOL_PM      = "±";
+    private static final String SYMBOL_MP      = "∓";
+
+    private static final String SYMBOL_MULTIPLY= "×";
     private static final String SYMBOL_DIVIDE  = "÷";
-    private static final String SYMBOL_EQUAL   = "=";
+
+    private static final String SYMBOL_INTGRAL = "∫";
+    private static final String SYMBOL_SIGMA   = "∑";
+
+
+
+
+
+
+
+
+
+
     private static final String SYMBOL_FACTORIAL = "!";
 
-    private static final Map<String, Integer> mapSym2Priority = new TreeMap<>();
+
+    private static final Map<String, Integer> mapOp2Priority = new TreeMap<>();
     static {
         int prior = 0;
-        mapSym2Priority.put(SYMBOL_EQUAL, ++prior);
+        mapOp2Priority.put(SYMBOL_EQUAL,    ++prior);
+        mapOp2Priority.put(SYMBOL_LESS    , ++prior);
+        mapOp2Priority.put(SYMBOL_LEQ     , ++prior);
+        mapOp2Priority.put(SYMBOL_GREATER , ++prior);
+        mapOp2Priority.put(SYMBOL_GEQ     , ++prior);
+        mapOp2Priority.put(SYMBOL_NEQ     , ++prior);
 
+        mapOp2Priority.put(SYMBOL_PLUS    , ++prior);
+        mapOp2Priority.put(SYMBOL_MINUS   , ++prior);
 
+        mapOp2Priority.put(SYMBOL_PM      , ++prior);
+        mapOp2Priority.put(SYMBOL_MP      , ++prior);
+
+        mapOp2Priority.put(SYMBOL_MULTIPLY, ++prior);
+        mapOp2Priority.put(SYMBOL_DIVIDE  , ++prior);
     }
 
 
@@ -76,6 +111,7 @@ public class MathMLFormulaParser extends FormulaParserBase {
             convertBrackets2mrow(documentNode);
             insertMultiplier(documentNode);
             convertFactorial(documentNode);
+            convertSign(documentNode);
 
             this.formula =  new Formula( extractSymbol( documentNode ) );
         }
@@ -83,14 +119,48 @@ public class MathMLFormulaParser extends FormulaParserBase {
         return this.formula;
     }
 
+    private void convertSign(Node parent)
+    {
+        if(parent == null || parent instanceof Text)
+            return;
+
+        int size = parent.getChildNodes().getLength();
+        if(size < 1 ) return;
+
+        Node last = null;
+        for(int i = 0 ; i < size; i++){
+            Node node = parent.getChildNodes().item(i);
+
+            String nodeName = node.getNodeName();
+            String text = node.getTextContent();
+            if(nodeName == null || text == null)    continue;;
+            if(nodeName.equals("mo") && (last == null || last.getNodeName().equals("mo") ))
+            {
+                switch (text)
+                {
+                    case SYMBOL_MINUS:
+                    case SYMBOL_PLUS:
+                    case SYMBOL_PM:
+                    case SYMBOL_MP:
+                        Node sign = xml.createElement("msign");
+                        sign.setTextContent(node.getTextContent());
+                        parent.replaceChild(sign, node);
+                        node = sign;
+                        break;
+                }
+            }
+            last = node;
+        }
+
+        for(int i = 0 ; i <size; i++)
+            convertSign(parent.getChildNodes().item(i));
+    }
 
     private void convertFactorial(Node parent) {
         if (parent == null || parent instanceof Text)
             return;
 
         int size = parent.getChildNodes().getLength();
-        if (size < 2)
-            return;
 
         Node[] childs = new Node[size];
         boolean exist = false;
@@ -415,22 +485,32 @@ public class MathMLFormulaParser extends FormulaParserBase {
             case "msqrt":
                 return new Power( extractSymbol(node.getFirstChild()), new Constant(1,2));
 
-            case "munderover":
-            case "msubsup":
-                Node firstChild = node.getFirstChild();
-                if(firstChild == null)
-                    return null;
+            case "mfrac":
+                Node attr = node.getAttributes().getNamedItem("linethickness");
+                String linethickness = (attr == null) ? null :  attr.getTextContent();
+                if(linethickness != null && linethickness.equals("0"))
+                    return new Combination( extractSymbol(node.getFirstChild()), extractSymbol( node.getLastChild()) );
+                return new Divide( extractSymbol(node.getFirstChild()) , extractSymbol(node.getLastChild()) );
 
-                switch (firstChild.getTextContent())
-                {
-                    case SYMBOL_INTGRAL:
-
-                        break;
-                    case SYMBOL_SIGMA:
-
-                }
-
-                return null;
+            case "msup":
+                return new Power( extractSymbol(node.getFirstChild()), extractSymbol(node.getLastChild()) );
+//
+//            case "munderover":
+//            case "msubsup":
+//                Node firstChild = node.getFirstChild();
+//                if(firstChild == null)
+//                    return null;
+//
+//                switch (firstChild.getTextContent())
+//                {
+//                    case SYMBOL_INTGRAL:
+//
+//                        break;
+//                    case SYMBOL_SIGMA:
+//
+//                }
+//
+//                return null;
         }
         return null;
     }
@@ -442,25 +522,184 @@ public class MathMLFormulaParser extends FormulaParserBase {
      */
     private Symbol extractSymbol(ArrayList<Node> nodeList)
     {
+        if(nodeList.size() == 0)
+            return null;
         if(nodeList.size() == 1)
             return extractSymbol(nodeList.get(0));
 
-        for(int i = 0 ;  i < nodeList.size(); i++)
+        String op = getRootOperator(nodeList);
+        if(op!=null)
+            return extractSymbolFromOpChain( op, nodeList );
+
+        if(nodeList.get(0).getNodeName().equals("msign"))
         {
-            if( isAdd( nodeList.get(i) ) )
+            ArrayList<Node> operands = new ArrayList<>();
+            for(int i = 1 ; i <nodeList.size(); i++)
             {
-                ArrayList<Node> left, right;
-                left = new ArrayList<>();
-                right = new ArrayList<>();
-                for(int j = 0 ; j < i ; j++)
-                    left.add(nodeList.get(j));
-                for(int j = i +1 ; j < nodeList.size();j ++)
-                    right.add(nodeList.get(j));
-                return new Add( extractSymbol(left), extractSymbol(right) );
+                operands.add(nodeList.get(i));
+            }
+
+            Symbol operand = extractSymbol(operands);
+            switch (nodeList.get(0).getTextContent())
+            {
+                case SYMBOL_PLUS:
+                    return new PlusSign(operand);
+                case SYMBOL_MINUS:
+                    return new MinusSign(operand);
+                case SYMBOL_PM:
+                    return new PMSign(operand);
+                case SYMBOL_MP:
+                    return new MPSign(operand);
             }
         }
         return null;
     }
+
+
+    private Symbol extractSymbolFromOpChain(String op, ArrayList<Node> nodeList)
+    {
+
+        ArrayList<Node> temp = new ArrayList<>();
+        ArrayList<Symbol> operands = new ArrayList<>();
+        for(int i = 0 ; i < nodeList.size(); i++)
+        {
+            Node node = nodeList.get(i);
+            String name = node.getNodeName();
+            String text = node.getTextContent();
+            if(i == nodeList.size()-1
+                    || (  name != null && text!=null && name.equals("mo") && text.equals(op)))
+            {
+                if(i == nodeList.size() -1)
+                {
+                    temp.add(node);
+                }
+                Symbol operand = extractSymbol(temp);
+                if( ( op.equals( SYMBOL_PLUS ) && operand instanceof Add )
+                        || (op.equals(SYMBOL_MULTIPLY) && operand instanceof Multiply) )
+                {
+                    BinaryOperator bin =  (BinaryOperator)operand;
+                    operands.add(bin.getLeftOperand() );
+                    operands.add(bin.getRightOperand());
+                }else
+                {
+                    operands.add(operand);
+                }
+                temp = new ArrayList<>();
+            }else
+            {
+                temp.add(node);
+            }
+        }
+
+        //for sort
+        switch (op)
+        {
+            case SYMBOL_EQUAL:
+            case SYMBOL_PLUS:
+            case SYMBOL_MULTIPLY:
+            case SYMBOL_NEQ:
+                Collections.sort(operands, COMPARATOR);
+                break;
+
+            case SYMBOL_DIVIDE:
+            case SYMBOL_MINUS:
+            case SYMBOL_MP:
+            case SYMBOL_PM:
+                Symbol head = operands.get(0);
+                operands.remove(head);
+                Collections.sort(operands, COMPARATOR);
+                operands.add(0, head);
+                break;
+        }
+
+
+        //for create Symbol
+        Symbol root = null;
+        int size = operands.size();
+        if(size < 2)
+            return null;
+        switch (op)
+        {
+            case SYMBOL_EQUAL:
+                root = new Equality(operands.get(size-2) , operands.get(size-1));
+                for(int i = size -3; i>= 0; i--)
+                    root = new Equality( operands.get(i) , root );
+                break;
+
+            case SYMBOL_PLUS:
+                root = new Add(operands.get(size-2) , operands.get(size-1));
+                for(int i = size -3; i>= 0; i--)
+                    root = new Add( operands.get(i) , root );
+                break;
+
+            case SYMBOL_MULTIPLY:
+                root = new Multiply(operands.get(size-2) , operands.get(size-1));
+                for(int i = size -3; i>= 0; i--)
+                    root = new Multiply( operands.get(i) , root );
+                break;
+
+            case SYMBOL_NEQ:
+                root = new Inequality(operands.get(size-2) , operands.get(size-1));
+                for(int i = size -3; i>= 0; i--)
+                    root = new Inequality( operands.get(i) , root );
+                break;
+
+            case SYMBOL_DIVIDE:
+                root = new Divide(operands.get(0) , operands.get(1));
+                for(int i = 2;  i < operands.size(); i++)
+                    root = new Divide( root , operands.get(i) );
+                break;
+
+            case SYMBOL_MINUS:
+                root = new Subtract(operands.get(0) , operands.get(1));
+                for(int i = 2;  i < operands.size(); i++)
+                    root = new Subtract( root , operands.get(i) );
+                break;
+
+            case SYMBOL_MP:
+                root = new MinusPlus(operands.get(0) , operands.get(1));
+                for(int i = 2;  i < operands.size(); i++)
+                    root = new MinusPlus( root , operands.get(i) );
+                break;
+
+            case SYMBOL_PM:
+                root = new PlusMinus(operands.get(0) , operands.get(1));
+                for(int i = 2;  i < operands.size(); i++)
+                    root = new PlusMinus( root , operands.get(i) );
+                break;
+        }
+        return root;
+    }
+
+    private static final Comparator<Symbol> COMPARATOR = new Comparator<Symbol>() {
+        @Override
+        public int compare(Symbol o1, Symbol o2) {
+            return o1.toLaTex().compareTo(o2.toLaTex());
+        }
+    };
+    private static TreeMap<String, Class<? extends Operator> > mapSym2Op = new TreeMap<>();
+    static {
+
+    }
+
+
+
+    private String getRootOperator(ArrayList<Node> nodeList)
+    {
+        String op = null;
+        for(Node node : nodeList)
+        {
+            String name = node.getNodeName();
+            String text = node.getTextContent();
+            if(name == null|| !name.equals("mo"))
+                continue;
+
+            if(op == null || (int)mapOp2Priority.get(text) < (int)mapOp2Priority.get(op))
+                op = text;
+        }
+        return op;
+    }
+
 
     /**
      * Symbol extractSymbol(ArrayList<Node> nodeList) 와 같음
@@ -485,33 +724,5 @@ public class MathMLFormulaParser extends FormulaParserBase {
     public static class MathMLParsingException extends Exception
     {}
 
-    public enum MathMLSymbols
-    {
-//        Add(core.symbol.operator.binary.Add.class, "+", 880, true, true)
-        ;
 
-        public final int priority;
-        public final String tag;
-        public final Class<? extends Symbol> symbolClass;
-        public final boolean isBinary;
-        public final int isChainable;
-        private MathMLSymbols(Class<? extends Symbol> symbolClass, String tag, int priority, boolean isBinary, int isChainable )
-        {
-            this.symbolClass = symbolClass;
-            this.tag = tag ;
-            this.priority = priority;
-            this.isBinary = isBinary;
-            this.isChainable = isChainable;
-        }
-
-
-        public static final int CHAIN_NONE = 0;
-        public static final int CHAIN_ALL  = 1;
-        public static final int CHAIN_WITHOUT_HEAD = 2;
-        public static MathMLSymbols getSymbolFromNode(Node node)
-        {
-
-            return null;
-        }
-    }
 }

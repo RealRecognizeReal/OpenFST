@@ -19,7 +19,7 @@ public class Equality extends NonArithmeticOperator {
 
     @Override
     public String toLaTex() {
-        return null;
+        return String.format("%s = %s", getLeftFormula().toLaTex(), getRightFormula().toLaTex());
     }
 
     @Override
