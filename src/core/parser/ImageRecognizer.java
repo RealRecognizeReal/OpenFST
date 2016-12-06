@@ -2,10 +2,9 @@ package core.parser;
 
 
 
+
+
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
 
 import java.io.File;
@@ -18,8 +17,15 @@ public class ImageRecognizer {
     static {
 //        System.load("/Users/waps12b/IdeaProjects/OpenFST/lib/opencv/opencv-2413.jar");
 //        System.load("/usr/local/Cellar/opencv/2.4.13.1/share/OpenCV/java/libopencv_java2413.dylib");
-//        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+//        System.load("/usr/lib/libopencv_java2413.dylib");
+//        System.loadLibrary( Core.NATIVE_LIBRARY_NAME);
+
+//        System.out.println( Core.NATIVE_LIBRARY_NAME);
+        nu.pattern.OpenCV.loadLocally();
+        nu.pattern.OpenCV.loadShared();
+
     }
+
 
     public ImageRecognizer(File img)
     {

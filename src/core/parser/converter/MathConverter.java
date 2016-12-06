@@ -8,16 +8,20 @@ import java.io.*;
 public class MathConverter {
 
     public static final String REMOVE_REGEX = "\\\\displaystyle|\\\\scriptstyle|\\\\limits|\\\\textstyle|\\\\scriptstyle";
-    public static final String REPLACE_FRAC_REGEX = "\\\\tfrac|\\\\dfrac";
+    public static final String REPLACE_FRAC_REGEX = "\\\\tfrac|\\\\dfrac|\\\\mfrac";
+    public static final String REPLACE_BINOM_REGEX = "\\\\tbinom|\\\\dbinom";
+
 
     public static String convertLaTex2MathML(String latex)
     {
         try{
             //remove useless tag
             latex = latex.replaceAll(REMOVE_REGEX,"");
+            latex = latex.replaceAll(REPLACE_FRAC_REGEX,"\\\\frac");
+            latex = latex.replaceAll(REPLACE_BINOM_REGEX,"\\\\binom");
 
-            //replace various xfrac tags with frac
-            latex = latex.replaceAll(REPLACE_FRAC_REGEX,"\\frac");
+            System.out.println(latex);
+
 
             //run nodejs script that convert latex string to mathml string
             Process p = Runtime.getRuntime().exec(new String[]{"node", "src/core/parser/converter/converter.js", latex.trim()});

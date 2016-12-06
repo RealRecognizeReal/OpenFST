@@ -12,15 +12,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
-/**
- *
- */
 public class MathMLFormulaParser extends FormulaParserBase {
-
     private final String mathmlString;
     private Document xml = null;
     private Formula formula = null;
-
 
     /**
      * MathML 포맷의 문자열을 통해 파싱을 진행하려는 경우 사용하는 생성자
@@ -33,7 +28,6 @@ public class MathMLFormulaParser extends FormulaParserBase {
     }
 
     /**
-     *
      * @return 생성된 수식의 Formula 객체
      * @throws MathMLParsingException Formula 생성(파싱)에 실패한 경우 반환되는 객체
      */
@@ -53,7 +47,7 @@ public class MathMLFormulaParser extends FormulaParserBase {
             {
                 throw new MathMLParsingException();
             }
-
+            //
             this.formula =  new Formula( extractSymbol( documentNode ) );
         }
 
@@ -76,7 +70,6 @@ public class MathMLFormulaParser extends FormulaParserBase {
 
         String nodeName = node.getNodeName();
         String nodeText = node.getTextContent();
-
 
         if(false == node.hasChildNodes())
             return;
@@ -134,8 +127,11 @@ public class MathMLFormulaParser extends FormulaParserBase {
         int nChild = node.getChildNodes().getLength();
         String nodeName = node.getNodeName();
 
+        if(nodeName.equals("merror") || nodeName.equals("annotation"))
+            return  null;
+
         //mrow, math항목은 단순히 하위 차일드를 가진 의미없는 엘리먼트
-        if( nodeName.equals("mrow") || nodeName.equals("math") )
+        if( nodeName.equals("mrow") || nodeName.equals("math") ||  nodeName.equals("semantic") )
         {
             if(nChild > 0 )
                 return extractSymbol(node.getChildNodes());
@@ -143,6 +139,10 @@ public class MathMLFormulaParser extends FormulaParserBase {
         }
 
         //leaf 노드
+        if(node.getNodeName().equals("mn"))
+        {
+
+        }
         if(node.getNodeName().equals("mi") )
         {
             String nodeText = node.getTextContent().trim();
@@ -224,7 +224,6 @@ public class MathMLFormulaParser extends FormulaParserBase {
 
     public static class MathMLParsingException extends Exception
     {}
-
 
     public enum MathMLSymbols
     {

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OperatorList>
+    <!-- name  : 기호의 이름. 클래스 이름과 대소문자까지 통일할 것 -->
+    <!-- mathml : MathML의 nodeValue-->
+    <!-- priority : 기호의 처리 우선순위, 클수록 먼저 처리함-->
+    <!-- type : unary, binary, head -->
+    <!-- chain : 피연산자들 순서가 바뀌어도 상관없는 연산, [none] (default) , [all], [withOutHead] -->
+    <!-- reverse :  -->
+
+    <!-- [Rank] 0 -->
+    <Operator name="Greater"        type="binary"   priority="999"         chain="none"     mathml="" />
+    <Operator name="Less"           type="binary"   priority="999"         chain="none"     mathml="" />
+    <Operator name="GreaterOrEqual" type="binary"   priority="998"         chain="none"       mathml="" />
+    <Operator name="LessOrEqual"    type="binary"   priority="998"         chain="none"       mathml="" />
+    <Operator name="NotEqual"        type="binary"   priority="997"         chain="all"        mathml="" />
+    <Operator name="Equal"           type="binary"   priority="996"         chain="all"        mathml="" />
+
+    <!-- [Rank 1] -->
+    <Operator name="Plus"           type="binary"   priority="888"         chain="all"          mathml="" />
+    <Operator name="Subtract"       type="binary"   priority="887"         chain="withOutHead"  mathml="" />
+    <Operator name="Multiply"       type="binary"   priority="886"         chain="all"          mathml="" />
+    <Operator name="Divide"         type="binary"   priority="885"         chain="withOutHead"  mathml="" />
+
+    <!-- [Rank 2] -->
+    <Operator name="PlusMinus"      type="binary"   priority="777"         chain=""        mathml="" />
+    <Operator name="MinusPlus"      type="binary"   priority="700"         chain=""        mathml="" />
+
+    <!-- [Rank 3] -->
+    <Symbol name="Power"            type="binary"   priority="600"         chain=""        mathml="" />
+
+
+    <Symbol name="GreaterOrEqual"   type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="Inequality"       type="binary"   priority=""         chain=""        mathml="" />
+    <Symbol name="Equality"         type="binary"   priority=""         chain=""        mathml="" />
+
+    <!-- [Rank 4] -->
+    <Symbol name="Greater"          type="unary"    priority=""         chain=""        mathml="" />
+    <Symbol name="GreaterOrEqual"   type="unary"    priority=""         chain=""        mathml="" />
+    <Symbol name="Inequality"       type="unary"    priority=""         chain=""        mathml="" />
+    <Symbol name="Equality"         type="unary"    priority=""         chain=""        mathml="" />
+
+
+
+
+
+</OperatorList>

@@ -16,4 +16,10 @@ public class FSTUtils {
             return false;
         }
     }
+
+
+    public static long getGCD(long a, long b)
+    {
+        return ( a % b == 0 ) ? b : getGCD(b, a % b);
+    }
 }
