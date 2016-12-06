@@ -20,6 +20,24 @@ public class MathMLFormulaParser extends FormulaParserBase {
     private Document xml = null;
     private Formula formula = null;
 
+    private static final String SYMBOL_INTGRAL = "∫";
+    private static final String SYMBOL_SIGMA   = "∑";
+    private static final String SYMBOL_MULTIPLY= "×";
+    private static final String SYMBOL_PLUS    = "+";
+    private static final String SYMBOL_MINUS   = "-";
+    private static final String SYMBOL_DIVIDE  = "÷";
+    private static final String SYMBOL_EQUAL   = "=";
+
+    private static final Map<String, Integer> mapSym2Priority = new TreeMap<>();
+    static {
+        int prior = 0;
+        mapSym2Priority.put(SYMBOL_EQUAL, ++prior);
+
+
+    }
+
+
+
     /**
      * MathML 포맷의 문자열을 통해 파싱을 진행하려는 경우 사용하는 생성자
      * @param mathmlString
@@ -52,6 +70,7 @@ public class MathMLFormulaParser extends FormulaParserBase {
             }
 
 //            reverseRelativeOp(documentNode);
+            insertMultiplier(documentNode);
             convertBrackets2mrow(documentNode);
             this.formula =  new Formula( extractSymbol( documentNode ) );
         }
@@ -59,6 +78,44 @@ public class MathMLFormulaParser extends FormulaParserBase {
         return this.formula;
     }
 
+    private void insertMultiplier(Node parent)
+    {
+        if(parent == null || parent instanceof Text)
+            return;
+
+        int size = parent.getChildNodes().getLength();
+        if(parent.getNodeName().equals("mrow"))
+        {
+            if(size <= 1) return;
+
+            Node[] childs = new Node[size];
+            for(int i =0 ; i < size; i++)
+                childs[i] = parent.getChildNodes().item(i);
+
+            for(int i = 0; i < size;i++)
+                parent.removeChild(childs[i]);
+
+
+            ArrayList<Node> nodes = new ArrayList<>();
+            Node last = null;
+            for(int i =0 ; i <size; i++){
+                Node node = childs[i];
+                if(!node.getNodeName().equals("mo") && last != null && !last.getNodeName().equals("mo"))
+                {
+                    Node mul = xml.createElement("mo");
+                    mul.setTextContent(SYMBOL_MULTIPLY);
+                    nodes.add(mul);
+                }
+                last = node;
+            }
+
+            for(Node node: nodes)
+                parent.appendChild(node);
+        }
+
+        for(int i = 0 ; i < parent.getChildNodes().getLength(); i++)
+            insertMultiplier(parent.getChildNodes().item(i));
+    }
     private void reverseRelativeOp(Node root)
     {
         if(root == null || root instanceof Text)
@@ -158,9 +215,9 @@ public class MathMLFormulaParser extends FormulaParserBase {
                     root.appendChild(node);
             }
         }
-
-
     }
+
+
     private void convertBrackets2mrow(Node parent)
     {
         if(parent == null || parent instanceof  Text )
@@ -277,6 +334,23 @@ public class MathMLFormulaParser extends FormulaParserBase {
 
             case "mi":
                 return new Variable( node.getTextContent() );
+
+            case "munderover":
+            case "msubsup":
+                Node firstChild = node.getFirstChild();
+                if(firstChild == null)
+                    return null;
+
+                switch (firstChild.getTextContent())
+                {
+                    case SYMBOL_INTGRAL:
+
+                        break;
+                    case SYMBOL_SIGMA:
+
+                }
+
+                return null;
         }
         return null;
     }
