@@ -20,6 +20,11 @@ public class ParserTest {
                 "{b+c}+{{a}}",
                 "x=\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}",
                 "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}=x",
+                "x=\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}",
+                "\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}=x",
+                "x^2+y^2=r^2",
+                "E = 9.8mh^2",
+                "f(x) = x"
         };
 
         int index = 0 ;

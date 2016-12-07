@@ -5,9 +5,17 @@ package core.symbol.base;
  */
 public abstract class Symbol {
 
+    public static final int RANK_CONSTANT   = 0;
+    public static final int RANK_VARIABLE   = 1;
+    public static final int RANK_SYMBOL     = 2;
+
 
     public abstract String toLaTex();
     public abstract String toMathML();
+    public int getRank()
+    {
+        return RANK_SYMBOL;
+    }
 
 
     @Override

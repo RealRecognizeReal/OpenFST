@@ -85,6 +85,11 @@ public class Constant extends Numeric {
     }
 
     @Override
+    public int getRank() {
+        return RANK_CONSTANT;
+    }
+
+    @Override
     public String toMathML() {
         return null;
     }

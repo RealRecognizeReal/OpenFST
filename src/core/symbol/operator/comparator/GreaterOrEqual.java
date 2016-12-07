@@ -24,6 +24,11 @@ public class GreaterOrEqual extends NonArithmeticOperator {
     }
 
     @Override
+    public Class<? extends NonArithmeticOperator> getReversedOperator() {
+        return LessOrEqual.class;
+    }
+
+    @Override
     public String toMathML() {
         return null;
     }

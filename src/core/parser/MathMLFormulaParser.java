@@ -1,6 +1,7 @@
 package core.parser;
 
 import core.Formula;
+import core.symbol.EOperator;
 import core.symbol.base.BinaryOperator;
 import core.symbol.base.Operator;
 import core.symbol.operator.binary.Combination;
@@ -42,37 +43,7 @@ public class MathMLFormulaParser extends FormulaParserBase {
     private static final String SYMBOL_INTGRAL = "∫";
     private static final String SYMBOL_SIGMA   = "∑";
 
-
-
-
-
-
-
-
-
-
     private static final String SYMBOL_FACTORIAL = "!";
-
-
-    private static final Map<String, Integer> mapOp2Priority = new TreeMap<>();
-    static {
-        int prior = 0;
-        mapOp2Priority.put(SYMBOL_EQUAL,    ++prior);
-        mapOp2Priority.put(SYMBOL_LESS    , ++prior);
-        mapOp2Priority.put(SYMBOL_LEQ     , ++prior);
-        mapOp2Priority.put(SYMBOL_GREATER , ++prior);
-        mapOp2Priority.put(SYMBOL_GEQ     , ++prior);
-        mapOp2Priority.put(SYMBOL_NEQ     , ++prior);
-
-        mapOp2Priority.put(SYMBOL_PLUS    , ++prior);
-        mapOp2Priority.put(SYMBOL_MINUS   , ++prior);
-
-        mapOp2Priority.put(SYMBOL_PM      , ++prior);
-        mapOp2Priority.put(SYMBOL_MP      , ++prior);
-
-        mapOp2Priority.put(SYMBOL_MULTIPLY, ++prior);
-        mapOp2Priority.put(SYMBOL_DIVIDE  , ++prior);
-    }
 
 
 
@@ -674,6 +645,8 @@ public class MathMLFormulaParser extends FormulaParserBase {
     private static final Comparator<Symbol> COMPARATOR = new Comparator<Symbol>() {
         @Override
         public int compare(Symbol o1, Symbol o2) {
+            if(o1.getRank() != o2.getRank())
+                return o1.getRank() - o2.getRank();
             return o1.toLaTex().compareTo(o2.toLaTex());
         }
     };
@@ -694,7 +667,7 @@ public class MathMLFormulaParser extends FormulaParserBase {
             if(name == null|| !name.equals("mo"))
                 continue;
 
-            if(op == null || (int)mapOp2Priority.get(text) < (int)mapOp2Priority.get(op))
+            if(op == null ||  EOperator.getBySymbol(text).Priority < EOperator.getBySymbol(op).Priority)
                 op = text;
         }
         return op;

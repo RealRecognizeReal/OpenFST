@@ -39,6 +39,11 @@ public class Variable extends Numeric {
     }
 
     @Override
+    public int getRank() {
+        return RANK_VARIABLE;
+    }
+
+    @Override
     public String toMathML() {
         return text;
     }

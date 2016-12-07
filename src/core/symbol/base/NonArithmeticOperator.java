@@ -14,6 +14,10 @@ public abstract class NonArithmeticOperator extends Operator {
 
     public Symbol getLeftFormula() { return this.operands[0]; }
     public Symbol getRightFormula() { return this.operands[1]; }
+    public Class<? extends NonArithmeticOperator> getReversedOperator()
+    {
+        return  null;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -22,6 +26,12 @@ public abstract class NonArithmeticOperator extends Operator {
             NonArithmeticOperator op = (NonArithmeticOperator) obj;
             if(this.getLeftFormula().equals( op.getLeftFormula()) && this.getRightFormula().equals(op.getRightFormula()))
                 return true;
+
+            if(getReversedOperator() != null && op.getClass() == getReversedOperator())
+            {
+                if(this.getLeftFormula().equals(op.getRightFormula()) && this.getRightFormula().equals(op.getLeftFormula()))
+                    return true;
+            }
         }
         return false;
     }

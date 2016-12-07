@@ -1,7 +1,9 @@
 package core.symbol.operator.binary;
 
+import core.symbol.EOperator;
 import core.symbol.base.BinaryOperator;
 import core.symbol.base.Symbol;
+import core.util.FSTUtils;
 
 /**
  * Created by waps12b on 2016. 11. 1..

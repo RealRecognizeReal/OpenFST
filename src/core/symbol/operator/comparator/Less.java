@@ -1,12 +1,13 @@
-package core.symbol.operator.binary;
+package core.symbol.operator.comparator;
 
 import core.symbol.base.BinaryOperator;
+import core.symbol.base.NonArithmeticOperator;
 import core.symbol.base.Symbol;
 
 /**
  * Created by Junghee on 2016-11-03.
  */
-public class Less extends BinaryOperator{
+public class Less extends NonArithmeticOperator{
 
     public Less(Symbol operand1, Symbol operand2) {
         super(operand1, operand2);
@@ -14,7 +15,7 @@ public class Less extends BinaryOperator{
 
     @Override
     public String toLaTex() {
-        return String.format("{%s}<{%s}",getLeftOperand().toLaTex(),getRightOperand().toLaTex());
+        return String.format("%s < %s",getLeftFormula().toLaTex(),getRightFormula().toLaTex());
     }
 
     @Override
@@ -28,12 +29,7 @@ public class Less extends BinaryOperator{
     }
 
     @Override
-    public boolean isAssociative() {
-        return false;
-    }
-
-    @Override
-    public boolean isDistributive() {
-        return false;
+    public Class<? extends NonArithmeticOperator> getReversedOperator() {
+        return Greater.class;
     }
 }

@@ -70,52 +70,21 @@ public class Indexer {
                 sc.close();
                 reader.close();
 
-                JSONParser parser = new JSONParser();
-                JSONObject json = (JSONObject) parser.parse(inputBuilder.toString());
-
-                String inputFormat = (String)json.get("input_format");
-                String outputFormat = (String)json.get("output_format");
-                String content = (String)json.get("content");
-
-                FormulaParserBase formulaParser = null;
-                if(inputFormat.toLowerCase().equals("mathml"))
-                {
-                    formulaParser = new MathMLFormulaParser(content);
-                }else if(inputFormat.toLowerCase().equals("latex"))
-                {
-                    formulaParser = new LaTexFormulaParser(content);
-                }else
-                {
-                    throw new Exception("Invalid Input Format");
-                }
-
-                String resultContent = null;
-                if(outputFormat.toLowerCase().equals("mathml"))
-                {
-                    resultContent = formulaParser.generateFormula().toMathML();
-                }else if(outputFormat.toLowerCase().equals("latex"))
-                {
-                    resultContent = formulaParser.generateFormula().toLatex();
-                }else if(outputFormat.toLowerCase().equals("json"))
-                {
-                    throw new Exception("Not yes");
-                }else
-                {
-                    throw new Exception("Invalid Output Format");
-                }
-
+                LaTexFormulaParser parser = new LaTexFormulaParser(inputBuilder.toString());
 
                 PrintWriter writer = new PrintWriter(client.getOutputStream());
-                writer.write(resultContent);
+
+                try
+                {
+                    writer.println( parser.generateFormula() );
+                }catch (Exception ex)
+                {
+                    writer.println("ERROR");
+                }
                 writer.close();
                 client.close();
             }
             catch(IOException e) {
-                e.printStackTrace();
-            }
-            catch(InterruptedException ie) {
-                ie.printStackTrace();
-            } catch (ParseException e) {
                 e.printStackTrace();
             }
             catch (Exception ex)

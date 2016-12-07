@@ -28,6 +28,7 @@ public abstract class BinaryOperator extends Operator{
     public abstract boolean isAssociative();
     public abstract boolean isDistributive();
 
+
     @Override
     public boolean equals(Object obj) {
         if(super.equals(obj))
