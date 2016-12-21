@@ -60,29 +60,28 @@ public class Indexer {
                 BufferedInputStream reader =  new BufferedInputStream( client.getInputStream() );
                 Scanner sc = new Scanner(reader);
 
-                StringBuilder inputBuilder = new StringBuilder();
-                while(sc.hasNextLine())
-                {
-                    inputBuilder.append(sc.nextLine());
-                    inputBuilder.append("\n");
-                }
-
-                sc.close();
-                reader.close();
-
-                LaTexFormulaParser parser = new LaTexFormulaParser(inputBuilder.toString());
-
                 PrintWriter writer = new PrintWriter(client.getOutputStream());
 
-                try
+                String latex = null;
+                while( (latex = sc.nextLine()) != null )
                 {
-                    writer.println( parser.generateFormula() );
-                }catch (Exception ex)
-                {
-                    writer.println("ERROR");
+                    LaTexFormulaParser parser = new LaTexFormulaParser(latex);
+                    try
+                    {
+                        writer.println( parser.generateFormula().toLatex() );
+                        writer.flush();
+                    }catch (Exception ex)
+                    {
+                        writer.println("err");
+                        writer.flush();
+                        ex.printStackTrace();
+                    }
                 }
+
                 writer.close();
                 client.close();
+                sc.close();
+                reader.close();
             }
             catch(IOException e) {
                 e.printStackTrace();
